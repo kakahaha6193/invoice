@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+// import * as $ from 'jquery'
 @Component({
   selector: 'app-invoice-detail',
   templateUrl: './invoice-detail.component.html',
@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InvoiceDetailComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor() { 
+    
   }
 
+  ngOnInit() {
+  
+  }
+  
+  print() {
+    window.print();
+  }
 }
