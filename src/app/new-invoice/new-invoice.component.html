@@ -10,7 +10,7 @@
             <div class="row">
               <!-- invoice view page -->
               <div class="col xl9 m8 s12">
-                <div class="card">
+                <div class="card" #content>
                   <div class="card-content px-36">
                     <!-- header section -->
                     <div class="row mb-3">
@@ -23,14 +23,14 @@
                           <div class="display-flex align-items-center">
                             <small>Date Issue: </small>
                             <div class="display-flex ml-4">
-                              <input type="text" class="datepicker mr-2 mb-1" placeholder="Select Date"
+                              <input type="text" class="datepicker mr-2 mb-1" placeholder="Select Date" disabled
                                 formControlName="issueDate">
                             </div>
                           </div>
                           <div class="display-flex align-items-center">
                             <small>Date Due: </small>
                             <div class="display-flex ml-4">
-                              <input type="text" class="datepicker mb-1" placeholder="Select Date"
+                              <input type="text" class="datepicker mb-1" placeholder="Select Date" disabled
                                 formControlName="dueDate">
                             </div>
                           </div>
@@ -70,11 +70,10 @@
                     </div>
                     <!-- product details table-->
                     <div class="invoice-product-details mb-3">
-                      <form class="form invoice-item-repeater">
-                        <ng-container *ngFor="let item of productList;index as i">
+                      <div class="form invoice-item-repeater" formArrayName="productList">
+                        <ng-container *ngFor="let item of productList.controls; let i = index;">
                           <div data-repeater-list="group-a">
                             <div class="mb-2" data-repeater-item>
-                              <!-- invoice Titles -->
                               <div class="row mb-1">
                                 <div class="col s3 m4">
                                   <h6 class="m-0">Item</h6>
@@ -89,10 +88,10 @@
                                   <h6 class="m-0">Total</h6>
                                 </div>
                               </div>
-                              <div class="invoice-item display-flex mb-1">
+                              <div class="invoice-item display-flex mb-1" [formGroupName]="i">
                                 <div class="invoice-item-filed row pt-1">
                                   <div class="col s12 m4 input-field">
-                                    <select class="invoice-item-select browser-default"  [(ngModel)]="item.name" [name]="'name'+ i" >
+                                    <select class="invoice-item-select browser-default" formControlName="name">
                                       <option value="Frest Admin Template">Frest Admin Template</option>
                                       <option value="Stack Admin Template">Stack Admin Template</option>
                                       <option value="Robust Admin Template">Robust Admin Template</option>
@@ -101,19 +100,18 @@
                                     </select>
                                   </div>
                                   <div class="col m3 s12 input-field">
-                                    <input type="text" placeholder="0" [(ngModel)]="item.price" [name]="'price'+ i">
+                                    <input type="number" placeholder="0" formControlName="price">
                                   </div>
                                   <div class="col m3 s12 input-field">
-                                    <input type="text" placeholder="0" [(ngModel)]="item.quantity" [name]="'quantity'+ i">
+                                    <input type="number" placeholder="0" formControlName="quantity">
                                   </div>
                                   <div class="col m2 s12 input-field">
-                                    <input type="text" placeholder="$00" disabled [(ngModel)]="item.total" [name]="'total'+ i">
+                                    <input type="number" placeholder="$00" disabled formControlName="total">
                                   </div>
                                   <div class="col m8 s12 input-field">
                                     <span>Discount: </span>
                                     <span class="discount-value mr-1">0%</span>
                                     <span class="mr-1 tax1">0%</span>
-                                    <span class="mr-1 tax2">0%</span>
                                   </div>
                                 </div>
                                 <div class="invoice-icon display-flex flex-column justify-content-between">
@@ -127,20 +125,11 @@
                                       <div class="row mr-0 ml-0">
                                         <div class="col s12 input-field">
                                           <label for="discount">Discount(%)</label>
-                                          <input type="number" id="discount" placeholder="0">
+                                          <input type="number" id="discount" placeholder="0" formControlName="discount">
                                         </div>
-                                        <div class="col s6">
-                                          <select id="Tax1" class="invoice-tax browser-default">
+                                        <div class="col s12">
+                                          <select id="Tax1" class="invoice-tax browser-default" formControlName="tax">
                                             <option value="0%" selected disabled>Tax1</option>
-                                            <option value="1%">1%</option>
-                                            <option value="10%">10%</option>
-                                            <option value="18%">18%</option>
-                                            <option value="40%">40%</option>
-                                          </select>
-                                        </div>
-                                        <div class="col s6">
-                                          <select id="Tax2" class="invoice-tax browser-default">
-                                            <option value="0%" selected disabled>Tax2</option>
                                             <option value="1%">1%</option>
                                             <option value="10%">10%</option>
                                             <option value="18%">18%</option>
@@ -160,16 +149,20 @@
                                   </div>
                                 </div>
                               </div>
+                              
                             </div>
+                         
                           </div>
+                     
                         </ng-container>
+               
                         <div class="input-field">
                           <button class="btn invoice-repeat-btn" data-repeater-create type="button" (click)= addItemToCart()>
                             <i class="material-icons left">add</i>
                             <span>Add Item</span>
                           </button>
                         </div>
-                      </form>
+                      </div>
                     </div>
                     <!-- invoice subtotal -->
                     <div class="invoice-subtotal">
@@ -194,7 +187,7 @@
                             </li>
                             <li class="display-flex justify-content-between">
                               <span class="invoice-subtotal-title">Tax</span>
-                              <h6 class="invoice-subtotal-value">{{amount.tax}}%</h6>
+                              <h6 class="invoice-subtotal-value">$ {{amount.tax}}</h6>
                             </li>
                             <li>
                               <div class="divider mt-2 mb-2"></div>
@@ -221,7 +214,7 @@
                       <a
                         class="btn indigo waves-effect waves-light display-flex align-items-center justify-content-center">
                         <i class="material-icons mr-4">check</i>
-                        <span class="responsive-text">Send Invoice</span>
+                        <span class="responsive-text" (click)="sendInvoice()">Send Invoice</span>
                       </a>
                     </div>
                     <div class="invoice-action-btn">
@@ -236,7 +229,7 @@
                         </a>
                       </div>
                       <div class="col s6 save">
-                        <a class="btn btn-light-indigo btn-block waves-effect waves-light">
+                        <a class="btn btn-light-indigo btn-block waves-effect waves-light" (click)="createInvoice()">
                           <span class="responsive-text">Save</span>
                         </a>
                       </div>
