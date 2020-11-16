@@ -23,4 +23,14 @@ export class InvoiceService {
     let url = environment.host + `invoices/update`;
     return this.http.post<any>(url,body);
   }
+
+  sendmail(formdata,invoiceId) {
+    let url = environment.host + `mail/send-mail-attachment?invoiceId=${invoiceId}`;
+    return this.http.post<any>(url,formdata);
+  }
+  
+  getDetailInvoice(id) {
+    let url = environment.host + `invoices/get-invoice-detail?id=${id}`;
+    return this.http.get<any>(url);
+  }
 }

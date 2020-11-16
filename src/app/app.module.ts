@@ -15,6 +15,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { AuthenticationService } from './_services';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
+import { NgxPaginationModule} from 'ngx-pagination';
+import { EditInvoiceComponent } from './edit-invoice/edit-invoice.component';
+import { PageNotFoundComponent } from './_guards/page-not-found/page-not-found.component'; 
 // import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 @NgModule({
   declarations: [
@@ -23,7 +26,9 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
     InvoiceDetailComponent,
     NewInvoiceComponent,
     LoginComponent,
-    MainComponent
+    MainComponent,
+    EditInvoiceComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +36,8 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
     HttpClientModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(), // ToastrModule added
-    FormsModule, ReactiveFormsModule 
+    FormsModule, ReactiveFormsModule ,
+    NgxPaginationModule
   ],
   providers: [
     AuthenticationService,

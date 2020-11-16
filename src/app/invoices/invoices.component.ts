@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 import * as $ from 'jquery'
@@ -8,12 +9,13 @@ import { InvoiceService } from '../_services/invoice.service';
   styleUrls: ['./invoices.component.scss']
 })
 export class InvoicesComponent implements OnInit {
-  listInvoice= []
+  listInvoice= [];
+  p: number = 1;
   constructor(private toast: ToastrService,
-    public invoiceService: InvoiceService) { }
+    public invoiceService: InvoiceService,
+    private router: Router) { }
 
   ngOnInit() {
-    console.log("aaaaaaaaa");
     this.getAll();
   }
   
@@ -26,5 +28,15 @@ export class InvoicesComponent implements OnInit {
     })
   }
 
+  preview(item) {
+    this.router.navigate(['invoice/detail',item.id])
+  }
 
+  edit(item) {
+    this.router.navigate(['invoice/edit',item.id])
+  }
+
+  createInvoice() {
+    this.router.navigate(['invoice/new']);
+  }
 }

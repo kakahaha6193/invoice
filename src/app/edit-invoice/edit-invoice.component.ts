@@ -4,12 +4,17 @@ import { ToastrService } from 'ngx-toastr';
 import { InvoiceService } from '../_services';
 import { debounceTime } from 'rxjs/operators';
 import * as moment from 'moment';
+import { Output, EventEmitter } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
-  selector: 'app-new-invoice',
-  templateUrl: './new-invoice.component.html',
-  styleUrls: ['./new-invoice.component.scss']
+  selector: 'app-edit-invoice',
+  templateUrl: './edit-invoice.component.html',
+  styleUrls: ['./edit-invoice.component.scss']
 })
-export class NewInvoiceComponent implements OnInit {
+export class EditInvoiceComponent implements OnInit {
+  idInvoice: number;
+  invoice: any;
+  @Output() directEvent = new EventEmitter<number>();
   checkoutForm: FormGroup;
   amount = {
     balance: 0,
@@ -20,28 +25,35 @@ export class NewInvoiceComponent implements OnInit {
     total: 0
   }
   listTotalItem = [];
-  constructor(
+  constructor(private service: InvoiceService,
     private formBuilder: FormBuilder,
-    private toast: ToastrService,
-    public invoiceService: InvoiceService
-  ) { }
+    private route: ActivatedRoute, 
+    private toast : ToastrService,
+    private router: Router) { }
 
   ngOnInit() {
+    this.idInvoice = Number.parseInt(this.route.snapshot.paramMap.get('id'));
+    this.getDetailInvoice();
+  }
+
+  initValueDefault(invoice) {
     this.checkoutForm = this.formBuilder.group({
-      invoiceCode: '',
+      invoiceCode: invoice ? invoice.invoiceCode : '',
       issueDate: moment(new Date()).format('YYYY-MM-DD'),
       dueDate: moment(new Date()).format('YYYY-MM-DD'),
-      productName: '',
-      customerName: '',
-      address: '',
-      customerEmail: '',
-      phoneNumber: '',
-      note: '',
-      paymentTerm: '',
+      productName:   '',
+      customerName: invoice && invoice.customer && invoice.customer.customerName ? invoice.customer.customerName : '',
+      address: invoice && invoice.customer && invoice.customer.address ? invoice.customer.address : '',
+      customerEmail: invoice && invoice.customer && invoice.customer.customerEmail ? invoice.customer.customerEmail : '',
+      phoneNumber: invoice && invoice.customer && invoice.customer.phoneNumber ? invoice.customer.phoneNumber : '',
+      note: invoice && invoice.note ? invoice.note : '',
+      paymentTerm:  invoice && invoice.paymentTerm ? invoice.paymentTerm : '',
       productList: this.formBuilder.array([
       ])
     });
+  }
 
+  listenValueChanges() {
     this.productList.valueChanges.pipe(debounceTime(1000)).subscribe(res => {
       this.amount.total = 0;
       this.amount.discount = 0;
@@ -49,7 +61,7 @@ export class NewInvoiceComponent implements OnInit {
       this.amount.subTotal = 0;
       res.map((item, index) => {
         this.listTotalItem[index] = this.sumaryTotal(item.quantity, item.price, item.tax, item.discount);
-        this.amount.total += this.listTotalItem[index]
+        this.amount.total +=  this.listTotalItem[index];
         this.amount.discount += this.sumaryDisccount(item.quantity, item.price, item.discount);
         this.amount.tax += this.sumaryTax(item.quantity, item.price, item.tax);
         this.amount.subTotal += this.sumarySubTotal(item.quantity, item.price);
@@ -57,6 +69,20 @@ export class NewInvoiceComponent implements OnInit {
     })
   }
 
+  getDetailInvoice() {
+    this.service.getDetailInvoice(this.idInvoice).subscribe(res => {
+      this.invoice = res;
+      this.initValueDefault(this.invoice);
+      this.listenValueChanges();
+      this.invoice.productList.map((item,index) => {
+        this.addItemToCart(item);
+      })
+      this.amount = this.invoice.amount;
+    },err => {
+      this.toast.error(err.message ? err.message : err);
+    })
+  }
+  
   sumaryTotal(quantity, price, tax, discount) {
     tax = tax ? tax : 0;
     discount = discount ? discount : 0;
@@ -78,31 +104,31 @@ export class NewInvoiceComponent implements OnInit {
     tax = tax ? tax : 0;
     return quantity * parseFloat(tax) * price / 100;
   }
-
   clearBill() {
     this.checkoutForm.reset();
   }
 
-  addItemToCart() {
-    let item = {
-      currencyUnit: "",
-      name: "",
-      price: 0,
-      quantity: 0,
+  addItemToCart(item?) {
+    let mItem = {
+      currencyUnit: item ? item.currencyUnit : '',
+      name: item ? item.name : '',
+      price: item ? item.price : 0,
+      quantity: item ? item.quantity : 0,
       tax: 0,
       discount: 0
     }
-    this.productList.push(this.formBuilder.group(item));
+    this.productList.push(this.formBuilder.group(mItem));
   }
 
   removeProductFromList(index) {
     this.productList.removeAt(index);
     this.listTotalItem.splice(index,1);
   }
-
-  createInvoice() {
+ 
+  saveInvoice(){
     let body = {
       amount: this.amount,
+      id: this.idInvoice,
       customer: {
         address: this.address,
         customerEmail: this.customerEmail,
@@ -114,14 +140,14 @@ export class NewInvoiceComponent implements OnInit {
       paymentTerm: this.paymentTerm,
       productList: this.productList.value
     }
-    this.invoiceService.createInvoice(body).subscribe(res => {
+    this.service.updateInvoice(body).subscribe(res => {
+      this.directEvent.emit(1);
+      
       this.toast.success("Create Success Fully!");
     }, err => {
       this.toast.error(err.message ? err.message : err);
     })
   }
-
-
   get address() {
     return this.checkoutForm.get('address').value as string;
   }

@@ -1,5 +1,4 @@
 <!-- BEGIN: Page Main-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
 <div id="main">
   <div class="row">
     <div class="content-wrapper-before gradient-45deg-indigo-purple"></div>
@@ -11,7 +10,7 @@
             <div class="row">
               <!-- invoice view page -->
               <div class="col xl9 m8 s12">
-                <div class="card" #content>
+                <div class="card">
                   <div class="card-content px-36">
                     <!-- header section -->
                     <div class="row mb-3">
@@ -42,7 +41,7 @@
                     <div class="row mb-3">
                       <div class="col m6 s12 invoice-logo display-flex pt-1 push-m6">
                         <img
-                          src="https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/gallery/pixinvent-logo.png"
+                          src="../../assets/images/pixinvent-logo.png"
                           alt="logo" height="46" width="164" />
                       </div>
                       <div class="col m6 s12 pull-m6">
@@ -158,7 +157,7 @@
                         </ng-container>
                
                         <div class="input-field">
-                          <button class="btn invoice-repeat-btn" data-repeater-create type="button" (click)= addItemToCart()>
+                          <button class="btn invoice-repeat-btn" data-repeater-create type="button" (click)=addItemToCart()>
                             <i class="material-icons left">add</i>
                             <span>Add Item</span>
                           </button>
@@ -198,7 +197,7 @@
                               <h6 class="invoice-subtotal-value">$ {{amount.total}}</h6>
                             </li>
                             <li class=" mt-2">
-                              <a class="btn btn-block waves-effect waves-light" (click)="createInvoice()">Save</a>
+                              <a class="btn btn-block waves-effect waves-light" (click)="saveInvoice()">Save</a>
                             </li>
                           </ul>
                         </div>
@@ -207,84 +206,7 @@
                   </div>
                 </div>
               </div>
-              <!-- invoice action  -->
-              <!-- <div class="col xl3 m4 s12">
-                <div class="card invoice-action-wrapper mb-10">
-                  <div class="card-content">
-                    <div class="invoice-action-btn">
-                      <a
-                        class="btn indigo waves-effect waves-light display-flex align-items-center justify-content-center">
-                        <i class="material-icons mr-4">check</i>
-                        <span class="responsive-text" (click)="sendInvoice()">Send Invoice</span>
-                      </a>
-                    </div>
-                    <div class="invoice-action-btn">
-                      <a class="btn btn-light-indigo btn-block waves-effect waves-light">
-                        <span class="responsive-text">Download Invoice</span>
-                      </a>
-                    </div>
-                    <div class="row invoice-action-btn">
-                      <div class="col s6 preview">
-                        <a class="btn btn-light-indigo btn-block waves-effect waves-light">
-                          <span class="responsive-text">Preview</span>
-                        </a>
-                      </div>
-                      <div class="col s6 save">
-                        <a class="btn btn-light-indigo btn-block waves-effect waves-light" (click)="createInvoice()">
-                          <span class="responsive-text">Save</span>
-                        </a>
-                      </div>
-                    </div>
-                    <div class="invoice-action-btn">
-                      <a class="btn waves-effect waves-light display-flex align-items-center justify-content-center">
-                        <i class="material-icons mr-3">attach_money</i>
-                        <span class="responsive-text">Add Payment</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div class="invoice-payment mb-3">
-                  <div class="invoice-payment-option mb-3">
-                    <p class="mb-0">Accept payments via</p>
-                    <select name="payment" id="paymentOption">
-                      <option value="DebitCard">Debit Card</option>
-                      <option value="DebitCard">Credit Card</option>
-                      <option value="DebitCard">Paypal</option>
-                      <option value="DebitCard">Internet Banking</option>
-                      <option value="DebitCard">UPI Transfer</option>
-                    </select>
-                  </div>
-                  <div class="invoice-terms display-flex flex-column">
-                    <div class="display-flex justify-content-between pb-2">
-                      <span>Payment Terms</span>
-                      <div class="switch">
-                        <label>
-                          <input type="checkbox" checked>
-                          <span class="lever"></span>
-                        </label>
-                      </div>
-                    </div>
-                    <div class="display-flex justify-content-between pb-2">
-                      <span>Client Notes</span>
-                      <div class="switch">
-                        <label>
-                          <input type="checkbox" checked>
-                          <span class="lever"></span>
-                        </label>
-                      </div>
-                    </div>
-                    <div class="display-flex justify-content-between pb-2">
-                      <span>Payment Stub</span>
-                      <div class="switch">
-                        <label>
-                          <input type="checkbox">
-                          <span class="lever"></span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
+        
             </div>
           </section>
         </form>

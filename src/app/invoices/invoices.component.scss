@@ -1,0 +1,12 @@
+.main-page {
+    height: calc(100vh - 116px);
+    width: 100%;
+    padding-left: 250px;
+}
+
+table td ,th {
+    padding: 15px;
+}
+.action-filters {
+    display: none !important;
+}

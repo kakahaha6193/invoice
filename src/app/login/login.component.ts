@@ -19,7 +19,10 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser && currentUser.token) {
+      this.router.navigate(['/invoice']);
+    }
   }
   onLogin() {
     let mUser = new User();
@@ -38,7 +41,7 @@ export class LoginComponent implements OnInit {
         if (mUser && mUser.token) {
             localStorage.setItem('currentUser', JSON.stringify(mUser));
         }
-        this.router.navigate(['/main']);
+        this.router.navigate(['/invoice']);
       },err => {
         this.toast.error(err.message ? err.message : err);
       })
